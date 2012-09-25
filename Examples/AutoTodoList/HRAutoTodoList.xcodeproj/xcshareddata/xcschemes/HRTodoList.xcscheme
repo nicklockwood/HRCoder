@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-               BuildableName = "HRTodoList.app"
+               BuildableName = "HRAutoTodoList.app"
                BlueprintName = "HRAutoTodoList"
                ReferencedContainer = "container:HRAutoTodoList.xcodeproj">
             </BuildableReference>
@@ -32,7 +32,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-            BuildableName = "HRTodoList.app"
+            BuildableName = "HRAutoTodoList.app"
             BlueprintName = "HRAutoTodoList"
             ReferencedContainer = "container:HRAutoTodoList.xcodeproj">
          </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-            BuildableName = "HRTodoList.app"
+            BuildableName = "HRAutoTodoList.app"
             BlueprintName = "HRAutoTodoList"
             ReferencedContainer = "container:HRAutoTodoList.xcodeproj">
          </BuildableReference>
@@ -69,7 +69,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-            BuildableName = "HRTodoList.app"
+            BuildableName = "HRAutoTodoList.app"
             BlueprintName = "HRAutoTodoList"
             ReferencedContainer = "container:HRAutoTodoList.xcodeproj">
          </BuildableReference>

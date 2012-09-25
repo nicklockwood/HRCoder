@@ -11,14 +11,14 @@ The simple dictionary/array-based format used by HRCoding can also be easily sto
 
 HRCoder is designed to work with the AutoCoding library (https://github.com/nicklockwood/AutoCoding), which can automatically write the `initWithCoder:` and `encodeWithCoder:` methods for your classes. Check out the *AutoTodoList* example to see how this works.
 
-HRCoder is also designed to work hand-in-hand with the BaseModel library (https://github.com/nicklockwood/BaseModel) to form the basis for building a powerful model hierarchy for your project with minimal effort. Check the *HRTodoList* example included in the BaseModel repository for an example of how these libraries can work together.
+HRCoder is also designed to work hand-in-hand with the BaseModel library (https://github.com/nicklockwood/BaseModel) which forms the basis for building a powerful model hierarchy for your project with minimal effort. Check the *HRTodoList* example included in the BaseModel repository for an example of how these libraries can work together.
 
 
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 5.1 / Mac OS 10.7 (Xcode 4.3, Apple LLVM compiler 3.1)
-* Earliest supported deployment target - iOS 4.3 / Mac OS 10.6
+* Supported build target - iOS 6.0 / Mac OS 10.8 (Xcode 4.5, Apple LLVM compiler 5.1)
+* Earliest supported deployment target - iOS 5.0 / Mac OS 10.7
 * Earliest compatible deployment target - iOS 4.0 / Mac OS 10.6
 
 NOTE: 'Supported' means that the library has been tested with this version. 'Compatible' means that the library should work on this OS version (i.e. it doesn't rely on any unavailable SDK features) but is no longer being tested for compatibility and may require tweaking or bug fixes to run correctly.
@@ -39,7 +39,7 @@ HRCoder is fully thread-safe.
 Installation
 --------------
 
-To use the HRCoder category in your project, just drag the HRCoder class files into your project.
+To use HRCoder, just drag the HRCoder class files into your project.
 
 
 HRCoder methods
@@ -54,20 +54,30 @@ Constructs an object tree from an encoded plist and returns it. The plist parame
 
 Note that this object need not actually be loaded from a Plist - you can create such an object quite easily using JSON or another compatible serialisation format.
 
+    + (id)unarchiveObjectWithData:(NSData *)data;
+    - (id)unarchiveObjectWithData:(NSData *)data;
+    
+Loads a serialised plist from an NSData object and returns an unarchived object tree by calling `unarchiveObjectWithPlist:` on the root object in the file. Supports text, xml or binary-formatted data. Data is deserialised using the `NSPropertyListMutableContainersAndLeaves` option to ensure that mutability of objects is preserved when serialising. There is a small performance overhead to this, so if you'd prefer immutable objects, load the plist yourself directly using the `NSPropertyListSerialization` class.
+
     + (id)unarchiveObjectWithFile:(NSString *)path;
     - (id)unarchiveObjectWithFile:(NSString *)path;
     
-Loads a file in Plist format and returns an unarchived object tree by calling `unarchiveObjectWithPlist:` on the root object in the file. Supports text, xml or binary-formatted Plist files. Files are loaded using the `NSPropertyListMutableContainersAndLeaves` option to ensure that mutability of objects is preserved when serialising. There is a small performance overhead to this, so if you'd prefer immutable objects, load the plist yourself directly using the `NSPropertyListSerialization` class.
+Loads a data file in Plist format and returns an unarchived object tree by calling `unarchiveObjectWithData:`.
 
     + (id)archivedPlistWithRootObject:(id)object;
     - (id)archivedPlistWithRootObject:(id)object;
     
 Encodes the passed object as a hierarchy of Plist-compatible objects, and returns it. The resultant object will typically be one of NSDictionary, NSArray, NSString, NSData, NSDate or NSNumber. This object is then safe to pass to NSPropertyListSerialisation for conversion to raw data or saving to a file (either a Plist or JSON, etc).
+
+    + (NSData *)archivedDataWithRootObject:(id)rootObject;
+    - (NSData *)archivedDataWithRootObject:(id)rootObject;
+    
+Encodes the passed object by calling `archivedPlistWithRootObject:` and then serialises it to data using the XML property list format.
     
     + (BOOL)archiveRootObject:(id)rootObject toFile:(NSString *)path;
     - (BOOL)archiveRootObject:(id)rootObject toFile:(NSString *)path;
     
-Encodes the passed object by calling `archivedPlistWithRootObject:` and then saves it as a binary property list at the file path specified. The file is saved atomically to prevent data corruption.
+Encodes the passed object by calling `archivedDataWithRootObject:` and then saves it to the file path specified. The file is saved atomically to prevent data corruption.
 
 
 Plist structure
