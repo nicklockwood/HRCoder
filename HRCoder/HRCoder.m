@@ -1,7 +1,7 @@
 //
 //  HRCoder.m
 //
-//  Version 1.1
+//  Version 1.1.1
 //
 //  Created by Nick Lockwood on 24/04/2012.
 //  Copyright (c) 2011 Charcoal Design
@@ -443,8 +443,8 @@
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     [coder.stack addObject:result];
-    [result setObject:NSStringFromClass([self class]) forKey:HRCoderClassNameKey];
-    [(id <NSCoding>)self encodeWithCoder:coder];
+    [result setObject:NSStringFromClass([self classForCoder]) forKey:HRCoderClassNameKey];
+    [(id <NSCoding>)[self replacementObjectForCoder:coder] encodeWithCoder:coder];
     [coder.stack removeLastObject];
     return result;
 }
@@ -469,7 +469,7 @@
 #endif
         
         [coder.stack removeLastObject];
-        return object;
+        return [object awakeAfterUsingCoder:coder];
     }
     else
     {

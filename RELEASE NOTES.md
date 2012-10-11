@@ -1,3 +1,8 @@
+Version 1.1.1
+
+- HRCoder now calls the `awakeAfterUsingCoder:` method on objects after they are unarchived.
+- HRCoder now calls the `classForCoder` and `replacementObjectForCoder:` methods on an object prior to archiving.
+
 Version 1.1
 
 - Added `unarchiveObjectWithData:` and `archivedDataWithRootObject:` methods
