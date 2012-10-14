@@ -1,7 +1,7 @@
 //
 //  HRCoder.m
 //
-//  Version 1.1.1
+//  Version 1.1.2
 //
 //  Created by Nick Lockwood on 24/04/2012.
 //  Copyright (c) 2011 Charcoal Design
@@ -234,7 +234,7 @@
 {
     [_stack removeAllObjects];
     [_knownObjects removeAllObjects];
-    [_knownObjects setObject:rootObject forKey:HRCoderRootObjectKey];
+    if (rootObject) [_knownObjects setObject:rootObject forKey:HRCoderRootObjectKey];
     id plist = [rootObject archivedObjectWithHRCoder:self];
     [_knownObjects removeAllObjects];
     [_stack removeAllObjects];
@@ -276,26 +276,30 @@
     return [[_stack lastObject] objectForKey:key] != nil;
 }
 
-- (id)encodedObject:(id)objv forKey:(NSString *)key
+- (id)encodedObject:(id)object forKey:(NSString *)key
 {
-    NSInteger knownIndex = [[_knownObjects allValues] indexOfObject:objv];
-    if (knownIndex != NSNotFound)
+    if (object && key)
     {
-        //create alias
-        NSString *aliasKeyPath = [[_knownObjects allKeys] objectAtIndex:knownIndex];
-        NSDictionary *alias = [NSDictionary dictionaryWithObject:aliasKeyPath forKey:HRCoderObjectAliasKey];
-        return alias;
+        NSInteger knownIndex = [[_knownObjects allValues] indexOfObject:object];
+        if (knownIndex != NSNotFound)
+        {
+            //create alias
+            NSString *aliasKeyPath = [[_knownObjects allKeys] objectAtIndex:knownIndex];
+            NSDictionary *alias = [NSDictionary dictionaryWithObject:aliasKeyPath forKey:HRCoderObjectAliasKey];
+            return alias;
+        }
+        else
+        {
+            //encode object
+            NSString *oldKeyPath = _keyPath;
+            self.keyPath = _keyPath? [_keyPath stringByAppendingPathExtension:key]: key;
+            [_knownObjects setObject:object forKey:_keyPath];
+            id encodedObject = [object archivedObjectWithHRCoder:self];
+            self.keyPath = oldKeyPath;
+            return encodedObject;
+        }
     }
-    else
-    {
-        //encode object
-        NSString *oldKeyPath = _keyPath;
-        self.keyPath = _keyPath? [_keyPath stringByAppendingPathExtension:key]: key;
-        [_knownObjects setObject:objv forKey:_keyPath];
-        id encodedObject = [objv archivedObjectWithHRCoder:self];
-        self.keyPath = oldKeyPath;
-        return encodedObject;
-    }
+    return nil;
 }
 
 - (void)encodeObject:(id)objv forKey:(NSString *)key

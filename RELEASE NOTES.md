@@ -1,3 +1,7 @@
+Version 1.1.2
+
+- Fixed crash when attempting to archive a nil object property
+
 Version 1.1.1
 
 - HRCoder now calls the `awakeAfterUsingCoder:` method on objects after they are unarchived.
