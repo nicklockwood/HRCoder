@@ -305,7 +305,7 @@
 - (void)encodeObject:(id)objv forKey:(NSString *)key
 {
     id object = [self encodedObject:objv forKey:key];
-    [[_stack lastObject] setObject:object forKey:key];
+    if (object) [[_stack lastObject] setObject:object forKey:key];
 }
 
 - (void)encodeConditionalObject:(id)objv forKey:(NSString *)key
@@ -379,7 +379,7 @@
         NSString *oldKeyPath = _keyPath;
         self.keyPath = newKeyPath;
         id decodedObject = [object unarchiveObjectWithHRCoder:self];
-        [_knownObjects setObject:decodedObject forKey:_keyPath];
+        if (decodedObject) [_knownObjects setObject:decodedObject forKey:_keyPath];
         self.keyPath = oldKeyPath;
         return decodedObject;
     }
@@ -482,10 +482,7 @@
         for (NSString *key in self)
         {
             id object = [coder decodeObjectForKey:key];
-            if (object)
-            {
-                [result setObject:object forKey:key];
-            }
+            if (object) [result setObject:object forKey:key];
         }
         result = [result copy];
         
