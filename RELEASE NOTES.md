@@ -1,3 +1,7 @@
+Version 1.1.3
+
+- Fixed analyzer warning due to over-autorelease of decoded object
+
 Version 1.1.2
 
 - Fixed crash when attempting to archive a nil object property
