@@ -1,3 +1,7 @@
+Version 1.2
+
+- Added `initForReadingWithData:` and `finishDecoding` methoda, which improve compatibility with the NSKeyedUnarchiver class interface.
+
 Version 1.1.3
 
 - Fixed analyzer warning due to over-autorelease of decoded object

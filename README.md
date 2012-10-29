@@ -79,6 +79,14 @@ Encodes the passed object by calling `archivedPlistWithRootObject:` and then ser
     
 Encodes the passed object by calling `archivedDataWithRootObject:` and then saves it to the file path specified. The file is saved atomically to prevent data corruption.
 
+    - (id)initForReadingWithData:(NSData *)data;
+    
+This method is used for creating an HRCoder instance from an encoded NSData object that can be passed directly to the initWithCoder: method of a class. It is included mostly for compatibility with the `NSKeyedUnarchiver` class, which has the same method. The data must contain a plist-encoded NSDictionary object. Other root objects types such as NSArray are not supported with this method (you can use the `unarchiveObjectWithData:` method to load data containing other root object types).
+    
+    - (void)finishDecoding;
+    
+Finishes decoding data that was opened using the `initForReadingWithData: method.`
+
 
 Plist structure
 ---------------------------

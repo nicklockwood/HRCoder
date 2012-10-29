@@ -1,7 +1,7 @@
 //
 //  HRCoder.m
 //
-//  Version 1.1.3
+//  Version 1.2
 //
 //  Created by Nick Lockwood on 24/04/2012.
 //  Copyright (c) 2011 Charcoal Design
@@ -203,9 +203,7 @@
             }
         }
     }
-    [_unresolvedAliases removeAllObjects];
-    [_knownObjects removeAllObjects];
-    [_stack removeAllObjects];
+    [self finishDecoding];
     return rootObject;
 }
 
@@ -237,7 +235,7 @@
     if (rootObject) [_knownObjects setObject:rootObject forKey:HRCoderRootObjectKey];
     id plist = [rootObject archivedObjectWithHRCoder:self];
     [_knownObjects removeAllObjects];
-    [_stack removeAllObjects];
+    [_stack setArray:[NSArray arrayWithObject:[NSMutableDictionary dictionary]]];
     return plist;
 }
 
@@ -251,6 +249,39 @@
 - (BOOL)archiveRootObject:(id)rootObject toFile:(NSString *)path
 {
     return [[self archivedDataWithRootObject:rootObject] writeToFile:path atomically:YES];
+}
+
+- (id)initForReadingWithData:(NSData *)data
+{
+    if ((self = [self init]))
+    {
+        //attempt to deserialise data as a plist
+        if (data)
+        {
+            //load plist
+            NSPropertyListFormat format;
+            NSPropertyListReadOptions options = NSPropertyListMutableContainersAndLeaves;
+            id plist = [NSPropertyListSerialization propertyListWithData:data options:options format:&format error:NULL];
+            
+            //only works if root object is a dictionary
+            if ([plist isKindOfClass:[NSDictionary class]])
+            {
+                [_stack addObject:plist];
+            }
+            else
+            {
+                [NSException raise:NSGenericException format:@"initForReadingWithData: method requires that the root object in the plist data is an NSDictionary. Decoding an %@ is not supported with this method. Try using unarchiveObjectWithData: instead.", [plist class]];
+            }
+        }
+    }
+    return self;
+}
+
+- (void)finishDecoding
+{
+    [_unresolvedAliases removeAllObjects];
+    [_knownObjects removeAllObjects];
+    [_stack setArray:[NSArray arrayWithObject:[NSMutableDictionary dictionary]]];
 }
 
 #if !__has_feature(objc_arc)
