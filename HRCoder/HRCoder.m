@@ -274,8 +274,7 @@
 - (id)archiveRootObject:(id)rootObject
 {
     [_knownObjects removeAllObjects];
-    if (rootObject) [_knownObjects setObject:rootObject forKey:HRCoderRootObjectKey];
-    [_stack setArray:[NSMutableArray arrayWithObject:[rootObject archivedObjectWithHRCoder:self]]];
+    [self encodeRootObject:rootObject];
     id plist = [_stack lastObject];
     [self finishEncoding];
     return plist;
@@ -340,6 +339,15 @@
 {
     id object = [self encodedObject:objv forKey:key];
     if (object) [[_stack lastObject] setObject:object forKey:key];
+}
+
+- (void)encodeRootObject:(id)rootObject
+{
+    if (rootObject)
+    {
+        [_knownObjects setObject:rootObject forKey:HRCoderRootObjectKey];
+        [_stack setArray:[NSMutableArray arrayWithObject:[rootObject archivedObjectWithHRCoder:self]]];
+    }
 }
 
 - (void)encodeConditionalObject:(id)objv forKey:(NSString *)key
