@@ -33,13 +33,21 @@ HRCoder is compatible with both ARC and non-ARC compile targets.
 Thread Safety
 --------------
 
-HRCoder is fully thread-safe.
+It is not safe to access a single HRCoder instance from multiple threads concurrently, hower using the HRCoder class methods to encode and decode objects is completely thread safe.
 
 
 Installation
 --------------
 
-To use HRCoder, just drag the HRCoder class files into your project.
+To use HRCoder, just drag the HRCoder.h and .m files into your project.
+
+
+HRCoder properties
+-------------------------
+
+    @property (nonatomic, assign) NSPropertyListFormat outputFormat;
+
+This property can be used to set the output format when serialising HRCoded plists. The default value is `NSPropertyListXMLFormat_v1_0`.
 
 
 HRCoder methods
@@ -48,44 +56,46 @@ HRCoder methods
 HRCoder implements the following methods, which mirror those of the NSKeyedArchiver and NSKeyedUnarchiver classes.
 
     + (id)unarchiveObjectWithPlist:(id)plist;
-    - (id)unarchiveObjectWithPlist:(id)plist;
     
 Constructs an object tree from an encoded plist and returns it. The plist parameter can be any object that is natively supported by the Plist format. This would typically be a container object such as an NSDictionary or NSArray. If any other kind of object is supplied it will be returned without modification.
 
 Note that this object need not actually be loaded from a Plist - you can create such an object quite easily using JSON or another compatible serialisation format.
 
     + (id)unarchiveObjectWithData:(NSData *)data;
-    - (id)unarchiveObjectWithData:(NSData *)data;
     
 Loads a serialised plist from an NSData object and returns an unarchived object tree by calling `unarchiveObjectWithPlist:` on the root object in the file. Supports text, xml or binary-formatted data. Data is deserialised using the `NSPropertyListMutableContainersAndLeaves` option to ensure that mutability of objects is preserved when serialising. There is a small performance overhead to this, so if you'd prefer immutable objects, load the plist yourself directly using the `NSPropertyListSerialization` class.
 
     + (id)unarchiveObjectWithFile:(NSString *)path;
-    - (id)unarchiveObjectWithFile:(NSString *)path;
     
 Loads a data file in Plist format and returns an unarchived object tree by calling `unarchiveObjectWithData:`.
 
     + (id)archivedPlistWithRootObject:(id)object;
-    - (id)archivedPlistWithRootObject:(id)object;
     
 Encodes the passed object as a hierarchy of Plist-compatible objects, and returns it. The resultant object will typically be one of NSDictionary, NSArray, NSString, NSData, NSDate or NSNumber. This object is then safe to pass to NSPropertyListSerialisation for conversion to raw data or saving to a file (either a Plist or JSON, etc).
 
     + (NSData *)archivedDataWithRootObject:(id)rootObject;
-    - (NSData *)archivedDataWithRootObject:(id)rootObject;
     
 Encodes the passed object by calling `archivedPlistWithRootObject:` and then serialises it to data using the XML property list format.
     
     + (BOOL)archiveRootObject:(id)rootObject toFile:(NSString *)path;
-    - (BOOL)archiveRootObject:(id)rootObject toFile:(NSString *)path;
     
 Encodes the passed object by calling `archivedDataWithRootObject:` and then saves it to the file path specified. The file is saved atomically to prevent data corruption.
 
     - (id)initForReadingWithData:(NSData *)data;
     
 This method is used for creating an HRCoder instance from an encoded NSData object that can be passed directly to the initWithCoder: method of a class. It is included mostly for compatibility with the `NSKeyedUnarchiver` class, which has the same method. The data must contain a plist-encoded NSDictionary object. Other root objects types such as NSArray are not supported with this method (you can use the `unarchiveObjectWithData:` method to load data containing other root object types).
+
+    - (id)initForWritingWithMutableData:(NSMutableData *)data;
     
+This method is used to create an HTCoder object for the purpose of writing to a data object. Once you have created the HRCoder instance, you can pass it to the `encodeWithCoder:` method of an object to encode it. Once you have written an object, calling `finishEncoding` will write the serialised plist data into the NSMutableData object.
+
     - (void)finishDecoding;
     
 Finishes decoding data that was opened using the `initForReadingWithData: method.`
+
+    - (void)finishEncoding;
+    
+When a file has been opened using the `initForWritingWithMutableData:` method, this will close it off and write the serialised data to the originally specified NSMutableData object.
 
 
 Plist structure

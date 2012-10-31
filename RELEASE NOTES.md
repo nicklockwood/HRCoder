@@ -1,6 +1,7 @@
 Version 1.2
 
-- Added `initForReadingWithData:` and `finishDecoding` methoda, which improve compatibility with the NSKeyedUnarchiver class interface.
+- Added `initForReadingWithData:` and `initForWritingWithMutableData:` methods, which improve compatibility with the NSKeyedArchiver/Unarchiver class interfaces.
+- Added outputFormat property for setting the Plist format when saving
 
 Version 1.1.3
 
