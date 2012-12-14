@@ -517,6 +517,7 @@
     {
         //ordinary dictionary
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
+		[coder.stack addObject:self];
         for (NSString *key in self)
         {
             id object = [coder decodeObjectForKey:key];
@@ -527,7 +528,7 @@
 #if !__has_feature(objc_arc)
         [result autorelease];
 #endif
-        
+		[coder.stack removeLastObject];
         return result;
     }
 }
