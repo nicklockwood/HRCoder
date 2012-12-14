@@ -1,3 +1,7 @@
+Version 1.2.1
+
+- Fixed bug where nested NSDictionaries were not decoded correctly
+
 Version 1.2
 
 - Added `initForReadingWithData:` and `initForWritingWithMutableData:` methods, which improve compatibility with the NSKeyedArchiver/Unarchiver class interfaces.
