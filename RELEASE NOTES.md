@@ -1,3 +1,8 @@
+Version 1.2.2
+
+- Fixed a bug where objects could be skipped when decoding, depending on the order of items in the plist
+- Added CocoaPods podspec
+
 Version 1.2.1
 
 - Fixed bug where nested NSDictionaries were not decoded correctly

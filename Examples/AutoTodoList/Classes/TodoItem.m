@@ -11,13 +11,11 @@
 
 @implementation TodoItem
 
-@synthesize label = _label, checked = _checked;
-
 + (TodoItem *)itemWithLabel:(NSString *)label
 {
 	TodoItem *item = [[self alloc] init];
 	item.label = label;
-	return [item autorelease];
+	return item;
 }
 
 #pragma mark -
@@ -25,15 +23,5 @@
 
 //note: we've not implemented the NSCoding methods
 //because the AutoCoding library takes care of this for us
-
-
-#pragma mark -
-#pragma mark Cleanup
-
-- (void)dealloc
-{
-	[_label release];
-	[super dealloc];
-}
 
 @end

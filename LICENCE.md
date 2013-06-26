@@ -1,6 +1,6 @@
 HRCoder
 
-Version 1.2.1, December 14th, 2012
+Version 1.2.2, June 26th, 2013
 
 Copyright (C) 2012 Charcoal Design
 

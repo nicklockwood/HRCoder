@@ -11,7 +11,7 @@
 
 @interface TodoList : NSObject
 
-@property (nonatomic, retain) NSMutableArray *items;
+@property (nonatomic, strong) NSMutableArray *items;
 
 + (TodoList *)sharedList;
 - (void)save;

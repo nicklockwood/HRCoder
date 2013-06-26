@@ -14,8 +14,6 @@
 
 @implementation TodoListViewController
 
-@synthesize tableView = _tableView;
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -32,7 +30,6 @@
 {	
 	UIViewController *viewController = [[NewItemViewController alloc] init];
 	[self.navigationController pushViewController:viewController animated:YES];
-    [viewController release];
 }
 
 #pragma mark -
@@ -72,7 +69,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellType];
 	if (cell == nil)
     {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewStylePlain reuseIdentifier:cellType] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewStylePlain reuseIdentifier:cellType];
 	}
 	
 	TodoItem *item = [[TodoList sharedList].items objectAtIndex:indexPath.row];
@@ -96,12 +93,6 @@
 {
 	self.tableView = nil;
     [super viewDidUnload];
-}
-
-- (void)dealloc
-{	
-	[_tableView release];
-    [super dealloc];
 }
 
 @end

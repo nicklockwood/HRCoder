@@ -1,7 +1,7 @@
 //
 //  AutoCoding.h
 //
-//  Version 1.2.1
+//  Version 2.0.2
 //
 //  Created by Nick Lockwood on 19/11/2011.
 //  Copyright (c) 2011 Charcoal Design
@@ -30,13 +30,18 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
-@interface NSObject (AutoCoding) <NSCoding, NSCopying>
+@interface NSObject (AutoCoding) <NSCoding, NSSecureCoding, NSCopying>
 
 //coding
 
-- (NSArray *)codableKeys;
-- (NSArray *)uncodableKeys;
++ (NSDictionary *)codableProperties;
++ (NSArray *)uncodableProperties;
 - (void)setWithCoder:(NSCoder *)aDecoder;
+
+//property access
+
+- (NSDictionary *)codableProperties;
+- (NSDictionary *)dictionaryRepresentation;
 
 //loading / saving
 

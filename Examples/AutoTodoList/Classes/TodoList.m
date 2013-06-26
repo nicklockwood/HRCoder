@@ -13,9 +13,6 @@
 
 @implementation TodoList
 
-@synthesize items = _items;
-
-
 #pragma mark -
 #pragma mark Loading and saving
 
@@ -32,13 +29,13 @@
     {
         //attempt to load saved file
         NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"TodoList.plist"];
-        sharedList = [[HRCoder unarchiveObjectWithFile:path] retain];
+        sharedList = [HRCoder unarchiveObjectWithFile:path];
         
         //if that fails, load default list from bundle
 		if (sharedList == nil)
         {
 			path = [[NSBundle mainBundle] pathForResource:@"TodoList" ofType:@"plist"];
-            sharedList = [[HRCoder unarchiveObjectWithFile:path] retain];
+            sharedList = [HRCoder unarchiveObjectWithFile:path];
 		}
 	}
 	return sharedList;
@@ -56,15 +53,5 @@
 
 //note: we've not implemented the NSCoding methods
 //because the AutoCoding library takes care of this for us
-
-
-#pragma mark -
-#pragma mark Cleanup
-
-- (void)dealloc
-{
-	[_items release];
-	[super dealloc];
-}
 
 @end
