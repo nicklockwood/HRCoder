@@ -1,3 +1,9 @@
+Version 1.2.3
+
+- Fixed a bug where objects that override isEqual would be incorrectly aliased
+- Objects of type NSNumber, NSDate and short NSStrings will no longer be aliased
+- Now complies with -Wall and -Wextra warning levels
+
 Version 1.2.2
 
 - Fixed a bug where objects could be skipped when decoding, depending on the order of items in the plist

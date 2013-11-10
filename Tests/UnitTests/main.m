@@ -10,7 +10,7 @@
 #import "HRCoderTests.h"
 
 
-int main (int argc, const char * argv[])
+int main (__unused int argc, __unused const char * argv[])
 {
     @autoreleasepool 
 	{

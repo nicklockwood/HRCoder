@@ -1,7 +1,7 @@
 //
 //  HRCoder.m
 //
-//  Version 1.2.2
+//  Version 1.2.3
 //
 //  Created by Nick Lockwood on 24/04/2012.
 //  Copyright (c) 2011 Charcoal Design
@@ -313,24 +313,27 @@
 {
     if (object && key)
     {
-        NSInteger knownIndex = [[_knownObjects allValues] indexOfObject:object];
-        if (knownIndex != NSNotFound)
+        if (![object isKindOfClass:[NSNumber class]] &&
+            ![object isKindOfClass:[NSDate class]] &&
+            (![object isKindOfClass:[NSString class]] || [object length] < 32))
         {
-            //create alias
-            NSString *aliasKeyPath = [_knownObjects allKeys][knownIndex];
-            NSDictionary *alias = @{HRCoderObjectAliasKey: aliasKeyPath};
-            return alias;
+            for (NSString *aliasKeyPath in _knownObjects)
+            {
+                if (_knownObjects[aliasKeyPath] == object)
+                {
+                    //create alias
+                    return @{HRCoderObjectAliasKey: aliasKeyPath};
+                }
+            }
         }
-        else
-        {
-            //encode object
-            NSString *oldKeyPath = _keyPath;
-            self.keyPath = _keyPath? [_keyPath stringByAppendingPathExtension:key]: key;
-            _knownObjects[_keyPath] = object;
-            id encodedObject = [object archivedObjectWithHRCoder:self];
-            self.keyPath = oldKeyPath;
-            return encodedObject;
-        }
+        
+        //encode object
+        NSString *oldKeyPath = _keyPath;
+        self.keyPath = _keyPath? [_keyPath stringByAppendingPathExtension:key]: key;
+        _knownObjects[_keyPath] = object;
+        id encodedObject = [object archivedObjectWithHRCoder:self];
+        self.keyPath = oldKeyPath;
+        return encodedObject;
     }
     return nil;
 }
@@ -352,9 +355,13 @@
 
 - (void)encodeConditionalObject:(id)objv forKey:(NSString *)key
 {
-    if ([[_knownObjects allValues] containsObject:objv])
+    for (id object in _knownObjects)
     {
-        [self encodeObject:objv forKey:key];
+        if (object == objv)
+        {
+            [self encodeObject:objv forKey:key];
+            break;
+        }
     }
 }
 
@@ -475,7 +482,7 @@
 
 @implementation NSObject(HRCoding)
 
-- (id)unarchiveObjectWithHRCoder:(HRCoder *)coder
+- (id)unarchiveObjectWithHRCoder:(__unused HRCoder *)coder
 {
     [NSException raise:NSGenericException format:@"%@ is not a supported HRCoder archive type", [self class]];
     return nil;
@@ -548,9 +555,9 @@
 - (id)unarchiveObjectWithHRCoder:(HRCoder *)coder
 {
     NSMutableArray *result = [NSMutableArray array];
-    for (int i = 0; i < [self count]; i++)
+    for (NSUInteger i = 0; i < [self count]; i++)
     {
-        NSString *key = [NSString stringWithFormat:@"%i", i];
+        NSString *key = [@(i) description];
         id encodedObject = self[i];
         id decodedObject = [coder decodeObject:encodedObject forKey:key];
         [result addObject:decodedObject];
@@ -561,10 +568,10 @@
 - (id)archivedObjectWithHRCoder:(HRCoder *)coder
 {
     NSMutableArray *result = [NSMutableArray array];
-    for (int i = 0; i < [self count]; i++)
+    for (NSUInteger i = 0; i < [self count]; i++)
     {
         id object = self[i];
-        NSString *key = [NSString stringWithFormat:@"%i", i];
+        NSString *key = [@(i) description];
         [result addObject:[coder encodedObject:object forKey:key]];
     }
     return result;
@@ -575,12 +582,12 @@
 
 @implementation NSString(HRCoding)
 
-- (id)unarchiveObjectWithHRCoder:(HRCoder *)coder
+- (id)unarchiveObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
 
-- (id)archivedObjectWithHRCoder:(HRCoder *)coder
+- (id)archivedObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
@@ -590,12 +597,12 @@
 
 @implementation NSData(HRCoding)
 
-- (id)unarchiveObjectWithHRCoder:(HRCoder *)coder
+- (id)unarchiveObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
 
-- (id)archivedObjectWithHRCoder:(HRCoder *)coder
+- (id)archivedObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
@@ -605,12 +612,12 @@
 
 @implementation NSNumber(HRCoding)
 
-- (id)unarchiveObjectWithHRCoder:(HRCoder *)coder
+- (id)unarchiveObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
 
-- (id)archivedObjectWithHRCoder:(HRCoder *)coder
+- (id)archivedObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
@@ -620,12 +627,12 @@
 
 @implementation NSDate(HRCoding)
 
-- (id)unarchiveObjectWithHRCoder:(HRCoder *)coder
+- (id)unarchiveObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
 
-- (id)archivedObjectWithHRCoder:(HRCoder *)coder
+- (id)archivedObjectWithHRCoder:(__unused HRCoder *)coder
 {
     return self;
 }
