@@ -1,7 +1,7 @@
 //
 //  HRCoder.h
 //
-//  Version 1.2.3
+//  Version 1.3
 //
 //  Created by Nick Lockwood on 24/04/2012.
 //  Copyright (c) 2011 Charcoal Design
@@ -34,38 +34,32 @@
 #import <Foundation/Foundation.h>
 
 
-static NSString *const HRCoderClassNameKey = @"$class";
-static NSString *const HRCoderRootObjectKey = @"$root";
-static NSString *const HRCoderObjectAliasKey = @"$alias";
+#pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 
 
-@interface HRCoderAliasPlaceholder : NSObject
+extern NSString *const HRCoderException;
+extern NSString *const HRCoderClassNameKey;
+extern NSString *const HRCoderRootObjectKey;
+extern NSString *const HRCoderObjectAliasKey;
 
-+ (HRCoderAliasPlaceholder *)placeholder;
 
-@end
+typedef NS_ENUM(NSUInteger, HRCoderFormat)
+{
+    HRCoderFormatXML = 0,
+    HRCoderFormatJSON,
+    HRCoderFormatBinary,
+};
 
 
 @interface HRCoder : NSCoder
 
-//required for 32-bit Macs
-#ifdef __i386
-{
-    NSMutableArray *_stack;
-    NSMutableDictionary *_knownObjects;
-    NSMutableDictionary *_unresolvedAliases;
-    NSString *_keyPath;
-    NSMutableData *_data;
-    NSPropertyListFormat _outputFormat;
-}
-#endif
+@property (nonatomic, assign) HRCoderFormat outputFormat;
 
-@property (nonatomic, assign) NSPropertyListFormat outputFormat;
-
-+ (id)unarchiveObjectWithPlist:(id)plist;
++ (id)unarchiveObjectWithPlistOrJSON:(id)plistOrJSON;
 + (id)unarchiveObjectWithData:(NSData *)data;
 + (id)unarchiveObjectWithFile:(NSString *)path;
 + (id)archivedPlistWithRootObject:(id)rootObject;
++ (id)archivedJSONWithRootObject:(id)rootObject;
 + (NSData *)archivedDataWithRootObject:(id)rootObject;
 + (BOOL)archiveRootObject:(id)rootObject toFile:(NSString *)path;
 

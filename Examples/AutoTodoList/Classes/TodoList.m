@@ -18,8 +18,7 @@
 
 + (NSString *)documentsDirectory
 {	
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	return [paths objectAtIndex:0];
+	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
 + (TodoList *)sharedList
@@ -41,12 +40,11 @@
 	return sharedList;
 }
 
-- (void)save;
+- (void)save
 {	
 	NSString *path = [[[self class] documentsDirectory] stringByAppendingPathComponent:@"TodoList.plist"];
 	[HRCoder archiveRootObject:self toFile:path];
 }
-
 
 #pragma mark -
 #pragma mark NSCoding

@@ -1,3 +1,12 @@
+Version 1.3
+
+- outputFormat enum is now of type HRCoderFormat, and includes JSON as an option
+- When using the JSON output format, NSData and NSDate objects are now encoded in a JSON-compatible format
+- HRCoder can now load data encoded in JSON format
+- Now complies with -Weverything warning level
+- Improved performance when using ARC
+- HRCoder now requires ARC
+
 Version 1.2.3
 
 - Fixed a bug where objects that override isEqual would be incorrectly aliased

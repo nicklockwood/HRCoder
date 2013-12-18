@@ -1,9 +1,9 @@
 Purpose
 --------------
 
-HRCoder is a replacement for the NSKeyedArchiver and NSKeyedUnarchiver classes. Although the NSKeyedArchiver writes data in binary Plist format, the structure of the Plist makes it hard to read, and nearly impossible to generate by hand.
+HRCoder is a replacement for the NSKeyedArchiver and NSKeyedUnarchiver classes. Although the NSKeyedArchiver writes data in the standard Plist format, the structure of the Plist makes it hard to read, and nearly impossible to generate by hand.
 
-The *HR* stands for *Human Readable*. HRCoder saves files in a simpler format than NSKeyedArchiver; Standard objects such as strings, dictionaries, arrays, numbers, booleans and binary data are all saved and loaded using the standard plist primitives, and any other type of object is saved as a simple dictionary, with the addition of a $class key to indicate the object type.
+The *HR* stands for *Human Readable*. HRCoder saves files in a simpler format than NSKeyedArchiver; Standard objects such as strings, dictionaries, arrays, numbers, booleans and binary data are all saved and loaded using the standard Plist primitives, and any other type of object is saved as a simple dictionary, with the addition of a $class key to indicate the object type.
 
 This makes it possible to easily generate HRCoder-compatible Plist files by hand, and then load them using the standard NSCoding protocol. You can also read and manually edit files saved by the HRCoder class without fear of corrupting the file.
 
@@ -27,13 +27,15 @@ NOTE: 'Supported' means that the library has been tested with this version. 'Com
 ARC Compatibility
 ------------------
 
-HRCoder is compatible with both ARC and non-ARC compile targets.
+As of version 1.3, HRCoder requires ARC. If you wish to use HRCoder in a non-ARC project, just add the -fobjc-arc compiler flag to the HRCoder.m class file. To do this, go to the Build Phases tab in your target settings, open the Compile Sources group, double-click HRCoder.m in the list and type -fobjc-arc into the popover.
+
+If you wish to convert your whole project to ARC, comment out the #error line in HRCoder.m, then run the Edit > Refactor > Convert to Objective-C ARC... tool in Xcode and make sure all files that you wish to use ARC for (including HRCoder.m) are checked.
 
 
 Thread Safety
 --------------
 
-It is not safe to access a single HRCoder instance from multiple threads concurrently, hower using the HRCoder class methods to encode and decode objects is completely thread safe.
+It is not safe to access a single HRCoder instance from multiple threads concurrently, hower using the HRCoder class methods to encode and decode objects is completely thread-safe.
 
 
 Installation
@@ -45,9 +47,9 @@ To use HRCoder, just drag the HRCoder.h and .m files into your project.
 HRCoder properties
 -------------------------
 
-    @property (nonatomic, assign) NSPropertyListFormat outputFormat;
+    @property (nonatomic, assign) HRCoderFormat outputFormat;
 
-This property can be used to set the output format when serialising HRCoded plists. The default value is `NSPropertyListXMLFormat_v1_0`.
+This property can be used to set the output format when serialising HRCoded objects. Possible values are `HRCoderFormatXML`, `HRCoderFormatJSON` and `HRCoderFormatBinary`. The default value is `HRCoderFormatXML`, which produces an XML Plist.
 
 
 HRCoder methods
@@ -55,15 +57,15 @@ HRCoder methods
 
 HRCoder implements the following methods, which mirror those of the NSKeyedArchiver and NSKeyedUnarchiver classes.
 
-    + (id)unarchiveObjectWithPlist:(id)plist;
+    + (id)unarchiveObjectWithPlistOrJSON:(id)plistOrJSON;
     
-Constructs an object tree from an encoded plist and returns it. The plist parameter can be any object that is natively supported by the Plist format. This would typically be a container object such as an NSDictionary or NSArray. If any other kind of object is supplied it will be returned without modification.
+Constructs an object tree from an encoded Plist or JSON object and returns it. The plistOrJSON parameter can be any object that is natively supported by the Plist or JSON formats. This would typically be a container object such as an NSDictionary or NSArray. If any other kind of object is supplied it will be returned without modification.
 
-Note that this object need not actually be loaded from a Plist - you can create such an object quite easily using JSON or another compatible serialisation format.
+Note that this object need not actually be loaded from a Plist or JSON file you can create such an object programmatically.
 
     + (id)unarchiveObjectWithData:(NSData *)data;
     
-Loads a serialised plist from an NSData object and returns an unarchived object tree by calling `unarchiveObjectWithPlist:` on the root object in the file. Supports text, xml or binary-formatted data. Data is deserialised using the `NSPropertyListMutableContainersAndLeaves` option to ensure that mutability of objects is preserved when serialising. There is a small performance overhead to this, so if you'd prefer immutable objects, load the plist yourself directly using the `NSPropertyListSerialization` class.
+Loads a serialised plist from an NSData object and returns an unarchived object tree by calling `unarchiveObjectWithPlist:` on the root object in the file. Supports text, JSON, XML or binary-formatted data. Data is deserialised using mutable containers to ensure that mutability of encoded arrays and dictionaries is preserved. If you'd prefer immutable objects, load the object yourself directly using the `NSPropertyListSerialization` or `NSJSONSerialization` classes.
 
     + (id)unarchiveObjectWithFile:(NSString *)path;
     
@@ -71,7 +73,11 @@ Loads a data file in Plist format and returns an unarchived object tree by calli
 
     + (id)archivedPlistWithRootObject:(id)object;
     
-Encodes the passed object as a hierarchy of Plist-compatible objects, and returns it. The resultant object will typically be one of NSDictionary, NSArray, NSString, NSData, NSDate or NSNumber. This object is then safe to pass to NSPropertyListSerialisation for conversion to raw data or saving to a file (either a Plist or JSON, etc).
+Encodes the passed object as a hierarchy of Plist-compatible objects, and returns it. The resultant object will typically be one of NSDictionary, NSArray, NSString, NSData, NSDate or NSNumber. This object is then safe to pass to NSPropertyListSerialisation for conversion to raw data or saving to a file.
+
+    + (id)archivedJSONWithRootObject:(id)object;
+    
+Encodes the passed object as a hierarchy of JSON-compatible objects, and returns it. The resultant object will typically be one of NSDictionary, NSArray, NSString, NSNumber or NSNull. This object is then safe to pass to NSPropertyListSerialisation for conversion to raw data or saving to a file.
 
     + (NSData *)archivedDataWithRootObject:(id)rootObject;
     

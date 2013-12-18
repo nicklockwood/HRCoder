@@ -13,16 +13,12 @@
 
 @implementation TodoList
 
-@synthesize items = _items;
-
-
 #pragma mark -
 #pragma mark Loading and saving
 
 + (NSString *)documentsDirectory
 {	
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	return [paths objectAtIndex:0];
+	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
 + (TodoList *)sharedList
@@ -32,13 +28,13 @@
     {
         //attempt to load saved file
         NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"TodoList.plist"];
-        sharedList = [[HRCoder unarchiveObjectWithFile:path] retain];
+        sharedList = [HRCoder unarchiveObjectWithFile:path];
         
         //if that fails, load default list from bundle
 		if (sharedList == nil)
         {
 			path = [[NSBundle mainBundle] pathForResource:@"TodoList" ofType:@"plist"];
-            sharedList = [[HRCoder unarchiveObjectWithFile:path] retain];
+            sharedList = [HRCoder unarchiveObjectWithFile:path];
 		}
 	}
 	return sharedList;
@@ -49,7 +45,6 @@
 	NSString *path = [[[self class] documentsDirectory] stringByAppendingPathComponent:@"TodoList.plist"];
 	[HRCoder archiveRootObject:self toFile:path];
 }
-
 
 #pragma mark -
 #pragma mark NSCoding
@@ -66,16 +61,6 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeObject:self.items forKey:@"items"];
-}
-
-
-#pragma mark -
-#pragma mark Cleanup
-
-- (void)dealloc
-{
-	[_items release];
-	[super dealloc];
 }
 
 @end

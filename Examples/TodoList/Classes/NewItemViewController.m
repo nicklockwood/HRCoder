@@ -12,14 +12,12 @@
 
 @interface NewItemViewController()
 
-@property (nonatomic, retain) TodoItem *item;
+@property (nonatomic, strong) TodoItem *item;
 
 @end
 
 
 @implementation NewItemViewController
-
-@synthesize item = _item;
 
 #pragma mark -
 #pragma mark UITextViewDelegate methods
@@ -45,10 +43,5 @@
 #pragma mark -
 #pragma mark Cleanup
 
-- (void)dealloc
-{	
-	[_item release];
-	[super dealloc];
-}
 
 @end

@@ -48,7 +48,7 @@
     NSDictionary *dict = @{HRCoderClassNameKey: @"Model", @"text1": @"Foo", @"text2": @"Bar"};
     
     //load as new model
-    Model *model = [HRCoder unarchiveObjectWithPlist:dict];
+    Model *model = [HRCoder unarchiveObjectWithPlistOrJSON:dict];
     
     //check properties
     NSAssert([model.text2 isEqualToString:@"Bar"], @"ChangingModel text failed");

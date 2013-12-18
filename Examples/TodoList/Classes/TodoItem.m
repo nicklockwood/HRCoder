@@ -11,17 +11,12 @@
 
 @implementation TodoItem
 
-@synthesize label = _label, checked = _checked;
-
 + (TodoItem *)itemWithLabel:(NSString *)label
 {
 	TodoItem *item = [[self alloc] init];
 	item.label = label;
-	return [item autorelease];
+	return item;
 }
-
-#pragma mark -
-#pragma mark NSCoding
 
 - (id)initWithCoder:(NSCoder *)decoder
 {	
@@ -36,16 +31,7 @@
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
 	[encoder encodeObject:self.label forKey:@"label"];
-	[encoder encodeObject:[NSNumber numberWithBool:self.checked] forKey:@"checked"];
-}
-
-#pragma mark -
-#pragma mark Cleanup
-
-- (void)dealloc
-{
-	[_label release];
-	[super dealloc];
+	[encoder encodeObject:@(self.checked) forKey:@"checked"];
 }
 
 @end

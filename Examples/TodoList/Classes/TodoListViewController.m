@@ -32,7 +32,6 @@
 {	
 	UIViewController *viewController = [[NewItemViewController alloc] init];
 	[self.navigationController pushViewController:viewController animated:YES];
-    [viewController release];
 }
 
 #pragma mark -
@@ -40,7 +39,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {	
-	TodoItem *item = [[TodoList sharedList].items objectAtIndex:indexPath.row];
+	TodoItem *item = ([TodoList sharedList].items)[indexPath.row];
 	item.checked = !item.checked;
 	[[TodoList sharedList] save];
 	[tableView reloadData];
@@ -72,10 +71,10 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellType];
 	if (cell == nil)
     {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewStylePlain reuseIdentifier:cellType] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewStylePlain reuseIdentifier:cellType];
 	}
 	
-	TodoItem *item = [[TodoList sharedList].items objectAtIndex:indexPath.row];
+	TodoItem *item = ([TodoList sharedList].items)[indexPath.row];
 	cell.textLabel.text = item.label;
 	if (item.checked)
     {
@@ -98,10 +97,5 @@
     [super viewDidUnload];
 }
 
-- (void)dealloc
-{	
-	[_tableView release];
-    [super dealloc];
-}
 
 @end
