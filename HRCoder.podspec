@@ -6,6 +6,7 @@ Pod::Spec.new do |s|
   s.license      = 'zlib'
   s.author       = "Nick Lockwood"
   s.source       = { :git => "https://github.com/nicklockwood/HRCoder.git", :tag => "1.3" }
+  s.requires_arc =  true
   s.ios.deployment_target = '4.3'
   s.osx.deployment_target = '10.6'
   s.source_files = 'HRCoder'
