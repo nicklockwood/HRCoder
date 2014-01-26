@@ -1,3 +1,8 @@
+Version 1.3.1
+
+- Fixed bug with encoding conditional objects
+- HRCoder can now encode NSData objects as JSON using base 64 encoding
+
 Version 1.3
 
 - outputFormat enum is now of type HRCoderFormat, and includes JSON as an option

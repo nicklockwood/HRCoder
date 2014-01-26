@@ -85,4 +85,36 @@
     NSAssert(model.array1 != model.array2, @"Aliasing failed");
 }
 
+- (void)testPlistData
+{
+    //encode null
+    NSArray *array = @[[NSNull null]];
+    
+    //seralialize
+    NSDictionary *plist = [HRCoder archivedPlistWithRootObject:array];
+    
+    //convert to plist data
+    NSError *error = nil;
+    NSData *output = [NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    NSAssert(output && !error, @"Plist encoding failed");
+}
+
+- (void)testJSONData
+{
+    //encode date and data
+    NSArray *array = @[[NSDate date], [@"foo" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //seralialize
+    NSDictionary *json = [HRCoder archivedJSONWithRootObject:array];
+    
+    //convert to json data
+    NSError *error = nil;
+    NSData *output = [NSJSONSerialization dataWithJSONObject:json options:0 error:&error];
+    NSAssert(output && !error, @"JSON encoding failed");
+    
+    //convert back
+    NSArray *result = [HRCoder unarchiveObjectWithData:output];
+    NSAssert([result isEqualToArray:array], @"JSON decoding failed");
+}
+
 @end
