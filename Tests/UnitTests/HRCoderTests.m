@@ -5,7 +5,8 @@
 //  Copyright (c) 2012 Charcoal Design. All rights reserved.
 //
 
-#import "HRCoderTests.h"
+
+#import <XCTest/XCTest.h>
 #import "HRCoder.h"
 
 
@@ -31,14 +32,18 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeObject:_text2 forKey:@"text2"];
-    [aCoder encodeObject:_textNew forKey:@"textNew"];
-    [aCoder encodeObject:_array1 forKey:@"array1"];
-    [aCoder encodeObject:_array2 forKey:@"array2"];
+    [aCoder encodeObject:self.text2 forKey:@"text2"];
+    [aCoder encodeObject:self.textNew forKey:@"textNew"];
+    [aCoder encodeObject:self.array1 forKey:@"array1"];
+    [aCoder encodeObject:self.array2 forKey:@"array2"];
 }
 
 @end
 
+
+@interface HRCoderTests : XCTestCase
+
+@end
 
 @implementation HRCoderTests
 
@@ -51,8 +56,8 @@
     Model *model = [HRCoder unarchiveObjectWithPlistOrJSON:dict];
     
     //check properties
-    NSAssert([model.text2 isEqualToString:@"Bar"], @"ChangingModel text failed");
-    NSAssert(model.textNew == nil, @"ChangingModel text failed");
+    XCTAssertEqualObjects(model.text2, @"Bar");
+    XCTAssertNil(model.textNew);
 }
 
 - (void)testAliasing
@@ -68,8 +73,8 @@
     model = [HRCoder unarchiveObjectWithData:data];
     
     //check properties
-    NSAssert([model.array1 isEqualToArray:model.array2], @"Aliasing failed");
-    NSAssert(model.array1 == model.array2, @"Aliasing failed");
+    XCTAssertEqualObjects(model.array1, model.array2);
+    XCTAssertEqual(model.array1, model.array2);
     
     //now make them different but equal
     model.array2 = @[@1, @2];
@@ -81,8 +86,8 @@
     model = [HRCoder unarchiveObjectWithData:data];
     
     //check properties
-    NSAssert([model.array1 isEqualToArray:model.array2], @"Aliasing failed");
-    NSAssert(model.array1 != model.array2, @"Aliasing failed");
+    XCTAssertEqualObjects(model.array1, model.array2);
+    XCTAssertNotEqual(model.array1, model.array2);
 }
 
 - (void)testPlistData
@@ -96,25 +101,27 @@
     //convert to plist data
     NSError *error = nil;
     NSData *output = [NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-    NSAssert(output && !error, @"Plist encoding failed");
+    XCTAssertNotNil(output);
+    XCTAssertNil(error);
 }
 
 - (void)testJSONData
 {
     //encode date and data
-    NSArray *array = @[[NSDate date], [@"foo" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSArray *array = @[[NSDate date], [@"foo" dataUsingEncoding:NSUTF8StringEncoding], [NSMutableString stringWithString:@"bar"]];
     
     //seralialize
     NSDictionary *json = [HRCoder archivedJSONWithRootObject:array];
     
     //convert to json data
     NSError *error = nil;
-    NSData *output = [NSJSONSerialization dataWithJSONObject:json options:0 error:&error];
-    NSAssert(output && !error, @"JSON encoding failed");
+    NSData *output = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)0 error:&error];
+    XCTAssertNotNil(output);
+    XCTAssertNil(error);
     
     //convert back
     NSArray *result = [HRCoder unarchiveObjectWithData:output];
-    NSAssert([result isEqualToArray:array], @"JSON decoding failed");
+    XCTAssertEqualObjects(result, array);
 }
 
 @end
