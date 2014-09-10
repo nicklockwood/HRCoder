@@ -170,7 +170,8 @@ Release notes
 Version 1.3.2
 
 - Fixed crash when encoding binary data in JSON files (affected mutable strings)
-
+- Fixed some additional warnings in Xcode 6
+ 
 Version 1.3.1
 
 - Fixed bug with encoding conditional objects

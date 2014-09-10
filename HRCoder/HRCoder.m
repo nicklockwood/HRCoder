@@ -33,7 +33,9 @@
 #import "HRCoder.h"
 
 
+#pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 #pragma GCC diagnostic ignored "-Wdirect-ivar-access"
+#pragma GCC diagnostic ignored "-Wselector"
 #pragma GCC diagnostic ignored "-Wgnu"
 
 
