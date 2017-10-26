@@ -20,8 +20,8 @@ HRCoder is also designed to work hand-in-hand with the BaseModel library (https:
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 8.0 / Mac OS 10.9 (Xcode 6.0, Apple LLVM compiler 6.0)
-* Earliest supported deployment target - iOS 5.0 / Mac OS 10.7
+* Supported build target - iOS 11.0 / Mac OS 10.12 (Xcode 9.0)
+* Earliest supported deployment target - iOS 9.0 / Mac OS 10.10
 * Earliest compatible deployment target - iOS 4.0 / Mac OS 10.6
 
 NOTE: 'Supported' means that the library has been tested with this version. 'Compatible' means that the library should work on this OS version (i.e. it doesn't rely on any unavailable SDK features) but is no longer being tested for compatibility and may require tweaking or bug fixes to run correctly.
@@ -166,6 +166,10 @@ Note that if you are using aliases you should be careful not to call methods on 
 
 Release notes
 ---------------
+
+Version 1.3.3
+
+- Fixed warnings in Xcode 9
 
 Version 1.3.2
 

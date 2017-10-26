@@ -1,7 +1,5 @@
 HRCoder
 
-Version 1.3.2, September 10th, 2014
-
 Copyright (C) 2012 Charcoal Design
 
 This software is provided 'as-is', without any express or implied

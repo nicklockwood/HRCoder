@@ -71,7 +71,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellType];
 	if (cell == nil)
     {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewStylePlain reuseIdentifier:cellType];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellType];
 	}
 	
 	TodoItem *item = ([TodoList sharedList].items)[indexPath.row];

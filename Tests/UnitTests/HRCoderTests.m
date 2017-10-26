@@ -108,7 +108,11 @@
 - (void)testJSONData
 {
     //encode date and data
-    NSArray *array = @[[NSDate date], [@"foo" dataUsingEncoding:NSUTF8StringEncoding], [NSMutableString stringWithString:@"bar"]];
+    NSArray *array = @[
+        [NSDate date],
+        (NSData *__nonnull)[@"foo" dataUsingEncoding:NSUTF8StringEncoding],
+        [NSMutableString stringWithString:@"bar"]
+    ];
     
     //seralialize
     NSDictionary *json = [HRCoder archivedJSONWithRootObject:array];
